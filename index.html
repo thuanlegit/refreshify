@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Refreshify</title>
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      #iframeContainer {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      iframe {
+        border: none;
+      }
+
+      #formContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+        height: 100vh;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 30px;
+        margin-left: 20px;
+      }
+
+      .tooltip {
+        position: relative;
+        display: inline-block;
+        font-size: 20px;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 300px;
+        background-color: #434343;
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 400;
+        border-radius: 6px;
+        padding: 12px 8px;
+        position: absolute;
+        z-index: 1;
+        top: 150%;
+        left: 50%;
+        margin-left: -158px;
+      }
+
+      .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+      }
+
+      form {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 5px 5px 15px #c0c0c0, -5px -5px 15px #ffffff;
+        padding: 20px;
+        width: 450px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 424px;
+        padding: 12px;
+        margin-bottom: 4px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+      }
+
+      input[type="submit"] {
+        background-color: #6681e8;
+        color: #fff;
+        padding: 12px 28pxpx;
+        width: 100%;
+        height: 50px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 4px;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #5370e2;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const defaultIframeWidth = 800;
+      const defaultIframeHeight = 600;
+      const defaultIframeScale = 1;
+      const defaultRefreshInterval = 60000;
+
+      function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      const src = getQueryParameter("src");
+
+      if (src) {
+        const widthParam = parseFloat(getQueryParameter("width"));
+        const heightParam = parseFloat(getQueryParameter("height"));
+        const scaleParam = parseFloat(getQueryParameter("scale"));
+        const refreshIntervalParam = parseInt(getQueryParameter("refreshInterval"));
+
+        function createIframe() {
+          const iframe = document.createElement("iframe");
+          iframe.src = src;
+
+          if (!isNaN(widthParam) && widthParam > 0) {
+            iframe.width = widthParam;
+          } else {
+            iframe.width = defaultIframeWidth;
+          }
+
+          if (!isNaN(heightParam) && heightParam > 0) {
+            iframe.height = heightParam;
+          } else {
+            iframe.height = defaultIframeHeight;
+          }
+
+          if (!isNaN(scaleParam) && scaleParam > 0) {
+            iframe.style.transform = "scale(" + scaleParam + ")";
+          } else {
+            iframe.style.transform = "scale(" + defaultIframeScale + ")";
+          }
+          iframe.style.transformOrigin = "top left";
+
+          return iframe;
+        }
+
+        const iframe1 = createIframe();
+        iframe1.id = "iframe1";
+        iframe1.style.display = "block";
+        const iframe2 = createIframe();
+        iframe2.id = "iframe2";
+        iframe2.style.display = "none";
+        const iframeContainer = document.createElement("div");
+        iframeContainer.id = "iframeContainer";
+        iframeContainer.appendChild(iframe1);
+        iframeContainer.appendChild(iframe2);
+
+        document.body.appendChild(iframeContainer);
+
+        var currentIframe = 1;
+        const iframes = [
+          document.getElementById("iframe1"),
+          document.getElementById("iframe2"),
+        ];
+
+        function refreshIframe() {
+          var nextIframe = (currentIframe + 1) % 2;
+
+          // Hide the current iframe and show the next one
+          iframes[currentIframe].style.display = "none";
+          iframes[nextIframe].style.display = "block";
+
+          // Reload the current iframe
+          iframes[currentIframe].contentWindow.location.replace(
+            iframes[currentIframe].src
+          );
+
+          // Update the current iframe index
+          currentIframe = nextIframe;
+        }
+
+        if (!isNaN(refreshIntervalParam) && refreshIntervalParam > 0) {
+          setInterval(refreshIframe, refreshIntervalParam);
+        } else {
+          setInterval(refreshIframe, defaultRefreshInterval);
+        }
+      } else {
+        const form = document.createElement("form");
+        form.id = "configForm";
+        form.innerHTML = `
+                <h1>Refreshify
+                  <div class="tooltip">ⓘ
+                    <span class="tooltiptext">Refreshify is your ultimate web content refreshing and embedding solution. With Refreshify, not only can you automatically refresh content from your chosen source websites, but you can also seamlessly embed this dynamic content into other platforms like ClickUp, enabling you to view real-time website content within your preferred applications. Whether you're managing project dashboards, monitoring live data, or simply enhancing your website's user experience, Refreshify empowers you to effortlessly sync and share dynamic content. Say goodbye to manual updates and hello to automated content synchronization and embedding with Refreshify.</span>
+                  </div>
+                </h1>
+
+                <label for="src">Source URL:</label>
+                <input type="text" id="src" name="src" required><br><br>
+                
+                <label for="width">Width:</label>
+                <input type="number" id="width" name="width" placeholder="${defaultIframeWidth}"><br><br>
+
+                <label for="height">Height:</label>
+                <input type="number" id="height" name="height" placeholder="${defaultIframeHeight}"><br><br>
+
+                <label for="scale">Scale:</label>
+                <input type="number" step="0.01" id="scale" name="scale" placeholder="${defaultIframeScale}"><br><br>
+               
+                <label for="refreshInterval">Refresh Interval (milliseconds):</label>
+                <input type="number" id="refreshInterval" name="refreshInterval" placeholder="${defaultRefreshInterval}"><br><br>
+
+                <input type="submit" value="Launch">
+            `;
+
+        // Event listener for form submission
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent the form from actually submitting
+
+          // Get the form values
+          const src = document.getElementById("src").value;
+          const width = document.getElementById("width").value;
+          const height = document.getElementById("height").value;
+          const scale = document.getElementById("scale").value;
+          const refreshInterval =
+            document.getElementById("refreshInterval").value;
+
+          // Construct the URL with query parameters and reload the page
+          const redirectUrl = `?src=${encodeURIComponent(
+            src
+          )}&width=${encodeURIComponent(
+            width
+          )}&height=${encodeURIComponent(
+            height
+          )}&scale=${encodeURIComponent(
+            scale
+          )}&refreshInterval=${encodeURIComponent(refreshInterval)}`;
+
+          const resultUrl = window.location.href + redirectUrl;
+          await navigator.clipboard.writeText(resultUrl);
+          alert("URL copied to clipboard:\n\n" + resultUrl);
+
+          window.location.search = redirectUrl;
+        });
+
+        const formContainer = document.createElement("div");
+        formContainer.id = "formContainer";
+        formContainer.appendChild(form);
+
+        document.body.appendChild(formContainer);
+      }
+    </script>
+  </body>
+</html>
