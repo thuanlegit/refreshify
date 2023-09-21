@@ -1,8 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Refreshify</title>
-    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+    <meta charset="UTF-8" />
+    <title>Refreshify - Web Content Refreshing and Embedding Solution</title>
+    <meta
+      name="description"
+      content="Your ultimate web content refreshing and embedding solution. With Refreshify, automate content refreshing and seamlessly embed dynamic content into platforms like ClickUp."
+    />
+    <meta
+      name="keywords"
+      content="Refreshify, web content, refreshing, embedding, real-time content, ClickUp"
+    />
+    <meta
+      property="og:title"
+      content="Refreshify - Web Content Refreshing and Embedding Solution"
+    />
+    <meta
+      property="og:description"
+      content="Your ultimate web content refreshing and embedding solution. With Refreshify, automate content refreshing and seamlessly embed dynamic content into platforms like ClickUp."
+    />
+    <meta property="og:image" content="https://thuanlegit.github.io/refreshify/images/thumbnail.jpeg" />
+    <!-- Replace with your actual image URL -->
+    <meta
+      property="og:url"
+      content="https://thuanlegit.github.io/refreshify/"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Refreshify" />
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -131,7 +156,9 @@
         const widthParam = parseFloat(getQueryParameter("width"));
         const heightParam = parseFloat(getQueryParameter("height"));
         const scaleParam = parseFloat(getQueryParameter("scale"));
-        const refreshIntervalParam = parseInt(getQueryParameter("refreshInterval"));
+        const refreshIntervalParam = parseInt(
+          getQueryParameter("refreshInterval")
+        );
 
         function createIframe() {
           const iframe = document.createElement("iframe");
@@ -242,9 +269,7 @@
           // Construct the URL with query parameters and reload the page
           const redirectUrl = `?src=${encodeURIComponent(
             src
-          )}&width=${encodeURIComponent(
-            width
-          )}&height=${encodeURIComponent(
+          )}&width=${encodeURIComponent(width)}&height=${encodeURIComponent(
             height
           )}&scale=${encodeURIComponent(
             scale
